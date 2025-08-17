@@ -5,7 +5,7 @@ const date=require(__dirname+"/date.js")
 
 const app= express();
 app.set('view engine','ejs');
-var items=["buy food"];
+var items=[" "];
 var work=[]
 
 
@@ -36,6 +36,8 @@ app.get("/work",function(req,res){
 app.get("/about",function(req,res){
     res.render("about")
 })
-
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 // submit ki value hmne tittle ki equal daldi
