@@ -5,8 +5,8 @@ const date=require(__dirname+"/date.js")
 
 const app= express();
 app.set('view engine','ejs');
-var items=[" "];
-var work=[]
+
+
 
 
 app.use(bodypar.urlencoded({extended : true}));
@@ -19,6 +19,7 @@ app.get("/",function(req,res){
 
 app.post("/",function(req,res){
    var item= req.body.item;
+ var items=[" "];
    if(req.body.submit==="work"){
     work.push(item);
     res.redirect('/work')
@@ -30,6 +31,7 @@ app.post("/",function(req,res){
 })
 
 app.get("/work",function(req,res){
+ var work=[]
     res.render("list",{day:"work",item:work})
 })
 
