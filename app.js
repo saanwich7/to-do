@@ -19,7 +19,7 @@ app.get("/",function(req,res){
 
 app.post("/",function(req,res){
    var item= req.body.item;
- var items=[" "];
+ var items=[];
    if(req.body.submit==="work"){
     work.push(item);
     res.redirect('/work')
