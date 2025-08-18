@@ -2,51 +2,42 @@ const express = require("express");
 const https = require("https");
 const bodypar = require("body-parser");
 const date = require(__dirname + "/date.js");
-const session = require("express-session");
 
 const app = express();
 app.set("view engine", "ejs");
 
 app.use(bodypar.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static("public")); // static folder
 
-// ✅ Use session to store items/work per user
-app.use(
-  session({
-    secret: "mySecretKey",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+// ❌ No global arrays now
 
 app.get("/", function (req, res) {
-  if (!req.session.items) {
-    req.session.items = []; // fresh list per user
-  }
-  var day = date.Date();
-  res.render("list", { day: day, item: req.session.items });
+  // fresh array on every refresh
+  let items = [];
+  let day = date.Date();
+  res.render("list", { day: day, item: items });
 });
 
 app.post("/", function (req, res) {
-  var item = req.body.item;
+  let item = req.body.item;
 
+  // you can send data along with redirect using query params
   if (req.body.submit === "work") {
-    if (!req.session.work) {
-      req.session.work = [];
-    }
-    req.session.work.push(item);
-    res.redirect("/work");
+    res.redirect("/work?new=" + item);
   } else {
-    req.session.items.push(item);
-    res.redirect("/");
+    res.redirect("/?new=" + item);
   }
 });
 
 app.get("/work", function (req, res) {
-  if (!req.session.work) {
-    req.session.work = []; // fresh work list per user
+  // fresh array on every refresh
+  let work = [];
+
+  if (req.query.new) {
+    work.push(req.query.new); // add only the latest submitted item
   }
-  res.render("list", { day: "work", item: req.session.work });
+
+  res.render("list", { day: "work", item: work });
 });
 
 app.get("/about", function (req, res) {
